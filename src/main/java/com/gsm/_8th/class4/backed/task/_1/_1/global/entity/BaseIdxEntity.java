@@ -1,19 +1,23 @@
 package com.gsm._8th.class4.backed.task._1._1.global.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-abstract class BaseIdxEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+public abstract class BaseIdxEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx", nullable = false, updatable = false, insertable = false, unique = true)
+    @Column(name = "idx", nullable = false, updatable = false, unique = true)
     protected Long idx;
+
     @Column(nullable = false, name = "created_at")
     protected LocalDateTime createdAt;
+
     @Column(nullable = false, name = "updated_at")
     protected LocalDateTime updatedAt;
 
