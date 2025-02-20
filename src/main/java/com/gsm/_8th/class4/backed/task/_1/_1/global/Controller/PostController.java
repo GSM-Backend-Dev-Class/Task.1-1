@@ -1,11 +1,13 @@
-package com.gsm._8th.class4.backed.task._1._1.global.Controller;
+package com.gsm._8th.class4.backed.task._1._1.global.controller;
 
 import com.gsm._8th.class4.backed.task._1._1.global.entity.Post;
 import com.gsm._8th.class4.backed.task._1._1.global.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -14,6 +16,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    // 모든 게시글 조회 (리소스가 없더라도 빈 리스트 반환)
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
         List<Post> posts = postService.getAllPosts();
@@ -49,5 +52,11 @@ public class PostController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    // 잘못된 URL 요청 시 빈 리스트 반환
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<List<Object>> handleNotFoundException(NoHandlerFoundException ex) {
+        return ResponseEntity.ok(Collections.emptyList()); // 빈 리스트 반환
     }
 }
