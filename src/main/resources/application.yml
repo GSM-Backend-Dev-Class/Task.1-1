@@ -3,12 +3,12 @@ spring:
     name: task.1-1
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${RDB_HOST:localhost}:${RDB_PORT:3306}/${RDB_NAME:task_1_1}
-    username: ${RDB_USER:root}
-    password: ${RDB_PASSWORD:123456}
+    url: jdbc:mysql://localhost:3306/task_1_1
+    username: root
+    password: 1234
   jpa:
     hibernate:
-      ddl-auto: ${DDL_AUTO:update}
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
