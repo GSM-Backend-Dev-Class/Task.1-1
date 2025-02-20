@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 @Entity
 @Getter
-@Setter  // 필드 값을 수정할 수 있도록 추가
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder

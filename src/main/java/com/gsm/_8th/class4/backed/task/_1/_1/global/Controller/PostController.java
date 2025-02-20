@@ -14,11 +14,10 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    // 모든 게시글 조회 (리소스가 없더라도 빈 리스트 반환)
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
         List<Post> posts = postService.getAllPosts();
-        return ResponseEntity.ok(posts); // 404 대신 빈 리스트 []
+        return ResponseEntity.ok(posts);
     }
 
     // 특정 게시글 조회
@@ -35,7 +34,7 @@ public class PostController {
         return ResponseEntity.ok(postService.createPost(post));
     }
 
-    // 게시글 수정 (예외 처리 추가)
+    // 게시글 수정
     @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post post) {
         return postService.updatePost(id, post)
