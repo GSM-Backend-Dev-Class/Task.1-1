@@ -2,7 +2,6 @@ package com.gsm._8th.class4.backed.task._1._1.service;
 
 import com.gsm._8th.class4.backed.task._1._1.domain.Article;
 import com.gsm._8th.class4.backed.task._1._1.repository.ArticleRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,39 +16,33 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public ResponseEntity<List<Article>> getAllArticles() {
-        List<Article> articles = articleRepository.findAll();
-        return ResponseEntity.ok(articles);
+    public List<Article> getAllArticles() {
+        return articleRepository.findAll();
     }
 
-    public ResponseEntity<Article> getArticleById(Long id) {
-        Optional<Article> article = articleRepository.findById(id);
-        return article.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public Optional<Article> getArticleById(Long id) {
+        return articleRepository.findById(id);
     }
 
-    public ResponseEntity<Article> createArticle(Article article) {
-        Article savedArticle = articleRepository.save(article);
-        return ResponseEntity.ok(savedArticle);
+    public Article createArticle(Article article) {
+        return articleRepository.save(article);
     }
 
-    public ResponseEntity<Article> updateArticle(Long id, Article articleDetails) {
+    public Optional<Article> updateArticle(Long id, Article articleDetails) {
         return articleRepository.findById(id)
                 .map(existingArticle -> {
                     existingArticle.setTitle(articleDetails.getTitle());
                     existingArticle.setContent(articleDetails.getContent());
-                    Article updatedArticle = articleRepository.save(existingArticle);
-                    return ResponseEntity.ok(updatedArticle);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                    return articleRepository.save(existingArticle);
+                });
     }
 
-    public ResponseEntity<Void> deleteArticle(Long id) {
+    public boolean deleteArticle(Long id) {
         return articleRepository.findById(id)
                 .map(article -> {
                     articleRepository.delete(article);
-                    return ResponseEntity.noContent().<Void>build();
+                    return true;
                 })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElse(false);
     }
 } 
