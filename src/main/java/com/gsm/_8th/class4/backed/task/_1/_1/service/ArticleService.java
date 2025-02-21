@@ -24,33 +24,50 @@ public class ArticleService {
     @Async
     @Cacheable("articles")
     public CompletableFuture<List<Article>> getAllArticles() {
-        return CompletableFuture.completedFuture(articleRepository.findAll());
+        return CompletableFuture.supplyAsync(() -> articleRepository.findAll())
+                .exceptionally(ex -> {
+                    return List.of();
+                });
     }
 
     @Async
     public CompletableFuture<Optional<Article>> getArticleById(@NotNull Long id) {
-        return CompletableFuture.completedFuture(articleRepository.findById(id));
+        return CompletableFuture.supplyAsync(() -> articleRepository.findById(id))
+                .exceptionally(ex -> {
+                    return Optional.empty();
+                });
     }
 
     @Async
     public CompletableFuture<Article> createArticle(@Valid Article article) {
-        return CompletableFuture.completedFuture(articleRepository.save(article));
+        return CompletableFuture.supplyAsync(() -> articleRepository.save(article))
+                .exceptionally(ex -> {
+                    return null;
+                });
     }
 
     @Async
     public CompletableFuture<Optional<Article>> updateArticle(@NotNull Long id, @Valid Article articleDetails) {
-        return CompletableFuture.completedFuture(articleRepository.findById(id)
+        return CompletableFuture.supplyAsync(() -> articleRepository.findById(id)
                 .map(existingArticle -> {
                     existingArticle.setTitle(articleDetails.getTitle());
                     existingArticle.setContent(articleDetails.getContent());
                     return articleRepository.save(existingArticle);
-                }));
+                }))
+                .exceptionally(ex -> {
+                    return Optional.empty();
+                });
     }
 
     @Async
     public CompletableFuture<Boolean> deleteArticle(@NotNull Long id) {
-        Optional<Article> article = articleRepository.findById(id);
-        article.ifPresent(articleRepository::delete);
-        return CompletableFuture.completedFuture(article.isPresent());
+        return CompletableFuture.supplyAsync(() -> {
+            Optional<Article> article = articleRepository.findById(id);
+            article.ifPresent(articleRepository::delete);
+            return article.isPresent();
+        })
+                .exceptionally(ex -> {
+                    return false;
+                });
     }
 } 
