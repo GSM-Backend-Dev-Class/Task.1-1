@@ -8,7 +8,9 @@ import org.springframework.scheduling.annotation.Async;
 import java.util.concurrent.CompletableFuture;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Optional;  
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Service
 public class ArticleService {
@@ -26,17 +28,17 @@ public class ArticleService {
     }
 
     @Async
-    public CompletableFuture<Optional<Article>> getArticleById(Long id) {
+    public CompletableFuture<Optional<Article>> getArticleById(@NotNull Long id) {
         return CompletableFuture.completedFuture(articleRepository.findById(id));
     }
 
     @Async
-    public CompletableFuture<Article> createArticle(Article article) {
+    public CompletableFuture<Article> createArticle(@Valid Article article) {
         return CompletableFuture.completedFuture(articleRepository.save(article));
     }
 
     @Async
-    public CompletableFuture<Optional<Article>> updateArticle(Long id, Article articleDetails) {
+    public CompletableFuture<Optional<Article>> updateArticle(@NotNull Long id, @Valid Article articleDetails) {
         return CompletableFuture.completedFuture(articleRepository.findById(id)
                 .map(existingArticle -> {
                     existingArticle.setTitle(articleDetails.getTitle());
@@ -46,7 +48,7 @@ public class ArticleService {
     }
 
     @Async
-    public CompletableFuture<Boolean> deleteArticle(Long id) {
+    public CompletableFuture<Boolean> deleteArticle(@NotNull Long id) {
         Optional<Article> article = articleRepository.findById(id);
         article.ifPresent(articleRepository::delete);
         return CompletableFuture.completedFuture(article.isPresent());
