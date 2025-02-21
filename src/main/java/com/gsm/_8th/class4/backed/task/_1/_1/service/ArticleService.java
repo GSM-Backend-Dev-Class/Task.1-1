@@ -3,6 +3,7 @@ package com.gsm._8th.class4.backed.task._1._1.service;
 import com.gsm._8th.class4.backed.task._1._1.domain.Article;
 import com.gsm._8th.class4.backed.task._1._1.repository.ArticleRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
+    @Cacheable("articles")
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
@@ -38,11 +40,8 @@ public class ArticleService {
     }
 
     public boolean deleteArticle(Long id) {
-        return articleRepository.findById(id)
-                .map(article -> {
-                    articleRepository.delete(article);
-                    return true;
-                })
-                .orElse(false);
+        Optional<Article> article = articleRepository.findById(id);
+        article.ifPresent(articleRepository::delete);
+        return article.isPresent();
     }
 } 
