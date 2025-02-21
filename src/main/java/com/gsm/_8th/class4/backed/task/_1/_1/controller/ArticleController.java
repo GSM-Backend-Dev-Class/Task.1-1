@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/articles")
@@ -18,34 +19,32 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Article>> getAllArticles() {
-        List<Article> articles = articleService.getAllArticles();
-        return ResponseEntity.ok(articles);
+    public CompletableFuture<ResponseEntity<List<Article>>> getAllArticles() {
+        return articleService.getAllArticles().thenApply(ResponseEntity::ok);
     }
 
     @GetMapping("/{articleId}")
-    public ResponseEntity<Article> getArticleById(@PathVariable Long articleId) {
+    public CompletableFuture<ResponseEntity<Article>> getArticleById(@PathVariable Long articleId) {
         return articleService.getArticleById(articleId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .thenApply(article -> article.map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.notFound().build()));
     }
 
     @PostMapping
-    public ResponseEntity<Article> createArticle(@RequestBody Article article) {
-        Article createdArticle = articleService.createArticle(article);
-        return ResponseEntity.ok(createdArticle);
+    public CompletableFuture<ResponseEntity<Article>> createArticle(@RequestBody Article article) {
+        return articleService.createArticle(article).thenApply(ResponseEntity::ok);
     }
 
     @PatchMapping("/{articleId}")
-    public ResponseEntity<Article> updateArticle(@PathVariable Long articleId, @RequestBody Article articleDetails) {
+    public CompletableFuture<ResponseEntity<Article>> updateArticle(@PathVariable Long articleId, @RequestBody Article articleDetails) {
         return articleService.updateArticle(articleId, articleDetails)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .thenApply(article -> article.map(ResponseEntity::ok)
+                        .orElseGet(() -> ResponseEntity.notFound().build()));
     }
 
     @DeleteMapping("/{articleId}")
-    public ResponseEntity<Void> deleteArticle(@PathVariable Long articleId) {
-        boolean deleted = articleService.deleteArticle(articleId);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    public CompletableFuture<ResponseEntity<Void>> deleteArticle(@PathVariable Long articleId) {
+        return articleService.deleteArticle(articleId)
+                .thenApply(deleted -> deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build());
     }
 } 
