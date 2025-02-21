@@ -2,7 +2,6 @@ package com.gsm._8th.class4.backed.task._1._1.service;
 
 import com.gsm._8th.class4.backed.task._1._1.domain.Article;
 import com.gsm._8th.class4.backed.task._1._1.repository.ArticleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,11 @@ import java.util.Optional;
 @Service
 public class ArticleService {
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
+
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     public ResponseEntity<List<Article>> getAllArticles() {
         List<Article> articles = articleRepository.findAll();

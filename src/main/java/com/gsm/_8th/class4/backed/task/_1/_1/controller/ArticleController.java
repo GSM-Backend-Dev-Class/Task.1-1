@@ -2,7 +2,6 @@ package com.gsm._8th.class4.backed.task._1._1.controller;
 
 import com.gsm._8th.class4.backed.task._1._1.domain.Article;
 import com.gsm._8th.class4.backed.task._1._1.service.ArticleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +11,11 @@ import java.util.List;
 @RequestMapping("/articles")
 public class ArticleController {
 
-    @Autowired
-    private ArticleService articleService;
+    private final ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Article>> getAllArticles() {
