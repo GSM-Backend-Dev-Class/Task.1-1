@@ -3,6 +3,7 @@ package com.gsm._8th.class4.backed.task._1._1.service.impl;
 import com.gsm._8th.class4.backed.task._1._1.domain.Article;
 import com.gsm._8th.class4.backed.task._1._1.repository.ArticleRepository;
 import com.gsm._8th.class4.backed.task._1._1.service.ArticleService;
+import com.gsm._8th.class4.backed.task._1._1.util.ExceptionHandlerUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -23,27 +24,21 @@ public class ArticleServiceImpl implements ArticleService {
     @Async
     public CompletableFuture<List<Article>> getAllArticles() {
         return CompletableFuture.supplyAsync(() -> articleRepository.findAll())
-                .exceptionally(ex -> {
-                    return List.of();
-                });
+                .exceptionally(ex -> ExceptionHandlerUtil.handleListException(ex));
     }
 
     @Override
     @Async
     public CompletableFuture<Optional<Article>> getArticleById(Long id) {
         return CompletableFuture.supplyAsync(() -> articleRepository.findById(id))
-                .exceptionally(ex -> {
-                    return Optional.empty();
-                });
+                .exceptionally(ex -> ExceptionHandlerUtil.handleOptionalException(ex));
     }
 
     @Override
     @Async
     public CompletableFuture<Article> createArticle(Article article) {
         return CompletableFuture.supplyAsync(() -> articleRepository.save(article))
-                .exceptionally(ex -> {
-                    return null;
-                });
+                .exceptionally(ex -> ExceptionHandlerUtil.handleException(ex, null));
     }
 
     @Override
@@ -54,9 +49,7 @@ public class ArticleServiceImpl implements ArticleService {
                     existingArticle.update(articleDetails.getTitle(), articleDetails.getContent());
                     return articleRepository.save(existingArticle);
                 }))
-                .exceptionally(ex -> {
-                    return Optional.empty();
-                });
+                .exceptionally(ex -> ExceptionHandlerUtil.handleOptionalException(ex));
     }
 
     @Override
@@ -67,8 +60,6 @@ public class ArticleServiceImpl implements ArticleService {
             article.ifPresent(articleRepository::delete);
             return article.isPresent();
         })
-                .exceptionally(ex -> {
-                    return false;
-                });
+                .exceptionally(ex -> ExceptionHandlerUtil.handleBooleanException(ex));
     }
 } 
