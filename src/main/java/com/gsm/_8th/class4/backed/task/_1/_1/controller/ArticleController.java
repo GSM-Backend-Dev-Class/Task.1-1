@@ -3,6 +3,7 @@ package com.gsm._8th.class4.backed.task._1._1.controller;
 import com.gsm._8th.class4.backed.task._1._1.domain.Article;
 import com.gsm._8th.class4.backed.task._1._1.dto.ArticleRequestDTO;
 import com.gsm._8th.class4.backed.task._1._1.service.ArticleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,11 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/articles")
+@RequiredArgsConstructor
 public class ArticleController {
 
+    @Qualifier("articleServiceImpl")
     private final ArticleService articleService;
-
-    public ArticleController(@Qualifier("articleServiceImpl") ArticleService articleService) {
-        this.articleService = articleService;
-    }
 
     @GetMapping
     public CompletableFuture<ResponseEntity<List<Article>>> getAllArticles() {
