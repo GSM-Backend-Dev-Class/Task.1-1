@@ -24,8 +24,7 @@ public class UpdateArticleService implements ArticleService {
     public CompletableFuture<Optional<Article>> updateArticle(Long id, Article articleDetails) {
         return CompletableFuture.supplyAsync(() -> articleRepository.findById(id)
                 .map(existingArticle -> {
-                    existingArticle.setTitle(articleDetails.getTitle());
-                    existingArticle.setContent(articleDetails.getContent());
+                    existingArticle.update(articleDetails.getTitle(), articleDetails.getContent());
                     return articleRepository.save(existingArticle);
                 }))
                 .exceptionally(ex -> {
