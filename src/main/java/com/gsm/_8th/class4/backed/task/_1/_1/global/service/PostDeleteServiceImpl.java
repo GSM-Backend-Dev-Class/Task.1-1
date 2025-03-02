@@ -1,4 +1,5 @@
-package com.gsm._8th.class4.backed.task._1._1.global.service;
+package com.gsm._8th.class4.backed.task._1._1.global.service.impl;
+
 import com.gsm._8th.class4.backed.task._1._1.global.repository.PostRepository;
 import com.gsm._8th.class4.backed.task._1._1.global.service.PostDeleteService;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +14,9 @@ public class PostDeleteServiceImpl implements PostDeleteService {
 
     @Override
     @Transactional
-    public boolean deletePost(Long id) {
+    public boolean deletePost(Long idx) {
         try {
-           postRepository.deleteById(id);
+            postRepository.deleteById(idx);
             return true;
         } catch (EmptyResultDataAccessException e) {
             return false;

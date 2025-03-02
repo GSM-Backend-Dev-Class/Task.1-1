@@ -9,13 +9,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
+@MappedSuperclass // 단독 테이블 생성 X, 상속받은 엔티티에서만 필드 포함
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Entity
-@Table(name = "base_idx_entity")  // 테이블명 지정
-@EntityListeners(AuditingEntityListener.class)
-public class BaseIdxEntity {
+public abstract class BaseIdxEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +27,4 @@ public class BaseIdxEntity {
     @LastModifiedDate
     @Column(nullable = false, name = "updated_at")
     private LocalDateTime updatedAt;
-
-    // 게시글 관련 필드 추가
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
-
-    @Column(nullable = false)
-    private String author;
 }

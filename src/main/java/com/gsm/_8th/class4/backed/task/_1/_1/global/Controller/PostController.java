@@ -1,6 +1,6 @@
 package com.gsm._8th.class4.backed.task._1._1.global.Controller;
 
-import com.gsm._8th.class4.backed.task._1._1.global.entity.BaseIdxEntity;
+import com.gsm._8th.class4.backed.task._1._1.global.entity.Post;
 import com.gsm._8th.class4.backed.task._1._1.global.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,33 +17,38 @@ public class PostController {
     private final PostUpdateService postUpdateService;
     private final PostDeleteService postDeleteService;
 
+    // 모든 게시글 조회
     @GetMapping
-    public ResponseEntity<List<BaseIdxEntity>> getAllPosts() {
+    public ResponseEntity<List<Post>> getAllPosts() { // ✅ BaseIdxEntity → Post로 변경
         return ResponseEntity.ok(postListService.getAllPosts());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BaseIdxEntity> getPostById(@PathVariable Long id) {
-        return postListService.getPostById(id)
+    // 특정 게시글 조회
+    @GetMapping("/{idx}") // ✅ id → idx 변경
+    public ResponseEntity<Post> getPostById(@PathVariable Long idx) {
+        return postListService.getPostById(idx)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 게시글 생성
     @PostMapping
-    public ResponseEntity<BaseIdxEntity> createPost(@RequestBody BaseIdxEntity post) {
+    public ResponseEntity<Post> createPost(@RequestBody Post post) {
         return ResponseEntity.ok(postCreateService.createPost(post));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<BaseIdxEntity> updatePost(@PathVariable Long id, @RequestBody BaseIdxEntity post) {
-        return postUpdateService.updatePost(id, post)
+    // 게시글 수정
+    @PutMapping("/{idx}") // ✅ id → idx 변경
+    public ResponseEntity<Post> updatePost(@PathVariable Long idx, @RequestBody Post post) {
+        return postUpdateService.updatePost(idx, post)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        if (!postDeleteService.deletePost(id)) {
+    // 게시글 삭제
+    @DeleteMapping("/{idx}") // ✅ id → idx 변경
+    public ResponseEntity<Void> deletePost(@PathVariable Long idx) {
+        if (!postDeleteService.deletePost(idx)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
