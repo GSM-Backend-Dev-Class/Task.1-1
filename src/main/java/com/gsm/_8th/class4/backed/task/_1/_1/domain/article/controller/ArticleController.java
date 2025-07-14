@@ -2,8 +2,6 @@ package com.gsm._8th.class4.backed.task._1._1.domain.article.controller;
 
 import com.gsm._8th.class4.backed.task._1._1.domain.article.dto.ArticleInfo;
 import com.gsm._8th.class4.backed.task._1._1.domain.article.dto.ArticleResponse;
-import com.gsm._8th.class4.backed.task._1._1.domain.article.entity.ArticleEntity;
-import com.gsm._8th.class4.backed.task._1._1.domain.article.repository.ArticleRepository;
 import com.gsm._8th.class4.backed.task._1._1.domain.article.service.ArticleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,19 +29,19 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postArticle(@Valid @RequestBody ArticleInfo articleInfo) {
+    public ResponseEntity<Void> postArticle(@Valid @RequestBody ArticleInfo articleInfo) {
         articleService.postArticle(articleInfo);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editArticle(@PathVariable Long id, @Valid @RequestBody ArticleInfo articleInfo) {
+    public ResponseEntity<Void> editArticle(@PathVariable Long id, @Valid @RequestBody ArticleInfo articleInfo) {
         articleService.editArticle(id, articleInfo);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteArticle(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
         articleService.deleteArticle(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
