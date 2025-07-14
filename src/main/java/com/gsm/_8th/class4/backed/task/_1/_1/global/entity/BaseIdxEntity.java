@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-abstract class BaseIdxEntity {
+public abstract class BaseIdxEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx", nullable = false, updatable = false, insertable = false, unique = true)
