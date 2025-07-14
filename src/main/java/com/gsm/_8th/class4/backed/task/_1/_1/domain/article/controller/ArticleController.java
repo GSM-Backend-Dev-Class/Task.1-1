@@ -1,6 +1,7 @@
 package com.gsm._8th.class4.backed.task._1._1.domain.article.controller;
 
-import com.gsm._8th.class4.backed.task._1._1.domain.article.dto.ArticleInfoDTO;
+import com.gsm._8th.class4.backed.task._1._1.domain.article.dto.ArticleInfo;
+import com.gsm._8th.class4.backed.task._1._1.domain.article.dto.ArticleResponse;
 import com.gsm._8th.class4.backed.task._1._1.domain.article.entity.ArticleEntity;
 import com.gsm._8th.class4.backed.task._1._1.domain.article.repository.ArticleRepository;
 import com.gsm._8th.class4.backed.task._1._1.domain.article.service.ArticleService;
@@ -17,42 +18,33 @@ import java.util.List;
 @RequestMapping("/articles")
 public class ArticleController {
     private final ArticleService articleService;
-    private final ArticleRepository articleRepository;
 
     @GetMapping
-    public ResponseEntity<List<ArticleEntity>> getArticles() {
-        return ResponseEntity.ok(articleRepository.findAll());
+    public ResponseEntity<List<ArticleResponse>> getArticles() {
+        return ResponseEntity.status(HttpStatus.OK).body(articleService.getArticles());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ArticleEntity> getArticleById(@PathVariable Long id) {
-        if(!(articleRepository.existsById(id))) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(articleService.viewArticle(id));
+    public ResponseEntity<ArticleResponse> getArticleById(@PathVariable Long id) {
+        ArticleResponse articleResponse = articleService.viewArticle(id);
+        return ResponseEntity.status(HttpStatus.OK).body(articleResponse);
     }
 
     @PostMapping
-    public ResponseEntity<?> postArticle(@Valid @RequestBody ArticleInfoDTO articleInfoDTO) {
-        articleService.postArticle(articleInfoDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    public ResponseEntity<?> postArticle(@Valid @RequestBody ArticleInfo articleInfo) {
+        articleService.postArticle(articleInfo);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editArticle(@PathVariable Long id, @Valid @RequestBody ArticleInfoDTO articleInfoDTO) {
-        if(!(articleRepository.existsById(id))) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        articleService.editArticle(id, articleInfoDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity<?> editArticle(@PathVariable Long id, @Valid @RequestBody ArticleInfo articleInfo) {
+        articleService.editArticle(id, articleInfo);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteArticle(@PathVariable Long id) {
-        if(!(articleRepository.existsById(id))) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        articleRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        articleService.deleteArticle(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
