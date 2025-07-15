@@ -1,7 +1,6 @@
 package com.gsm._8th.class4.backed.task._1._1.domain.article.dto;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public record ArticleResponse(
         Long idx,

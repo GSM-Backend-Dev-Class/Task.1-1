@@ -8,12 +8,11 @@ import com.gsm._8th.class4.backed.task._1._1.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ArticleService {
+public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     // 전체 열람
     public List<ArticleResponse> getArticles() {
